@@ -1,0 +1,1 @@
+{"options":{},"indexes":[{"v":2,"key":{"_id":1},"name":"_id_","ns":"databaseSirine.user"},{"v":2,"unique":true,"key":{"email":1},"name":"email_1","ns":"databaseSirine.user","sparse":true}],"uuid":"2c335516b6524cdcb1b933ff9fd38827"}
