@@ -1,0 +1,25 @@
+﻿'Gunakan boleh ganti credit jangan
+'Created by Tommy Aditya /
+
+'fb.com/tomzadit96
+
+
+SET !EXTRACT_TEST_POPUP NO
+SET !ERRORIGNORE yes
+SET !TIMEOUT_STEP 999999
+SET !TIMEOUT_PAGE 999999
+CLEAR
+SET !DATASOURCE toped.csv
+SET !DATASOURCE_COLUMNS 1
+SET !DATASOURCE_LINE {{!LOOP}}
+TAB T=1
+URL GOTO=https://pulsa.tokopedia.com/gift-card/tokopedia/redeem/
+TAG POS=2 TYPE=A ATTR=TXT:Masuk
+TAG POS=1 TYPE=INPUT:TEXT FORM=ID:header-frm-login ATTR=ID:inputEmail CONTENT=irsisilia08@gmail.com
+SET !ENCRYPTION NO
+TAG POS=1 TYPE=INPUT:PASSWORD FORM=ID:header-frm-login ATTR=ID:inputPassword CONTENT=irnasisilia
+TAG POS=1 TYPE=BUTTON FORM=ID:header-frm-login ATTR=ID:email_btn
+TAG POS=1 TYPE=INPUT:TEXT FORM=ID:redeem-form ATTR=ID:voucher-code CONTENT={{!COL1}}
+WAIT SECONDS =5
+TAG POS=1 TYPE=BUTTON FORM=ID:redeem-form ATTR=ID:redeem-submit
+WAIT SECONDS = 5
