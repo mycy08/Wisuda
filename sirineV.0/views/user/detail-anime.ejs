@@ -349,13 +349,13 @@
                       persenBintang1=(t_score3+t_score2+t_score1)/jumlahRating*100
 
                       var ratingAkhir = (score/anime.userStrings.length)/2
-                      console.log(score)
+                      
 
                       
                       
                 %>
                 <h1 class=""><%= ratingAkhir.toFixed(2) %> Dari 5</h1>
-                <h6 class="">Banyak Ulasan <%= anime.userStrings.length %> Orang <%= req.params.id %></h6>
+                <h6 class="">Banyak Ulasan <%= anime.userStrings.length %> Orang</h6>
                 
               </div>
             </div>
@@ -672,7 +672,7 @@
         %>
       
         <div class="col-md-12 lihatrekomendasi">
-          <a href="#">
+          <a href="/rekomendasi/<%= req.params.id %>/1">
             Lihat Rekomendasi
           </a>
         </div>

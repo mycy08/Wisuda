@@ -33,7 +33,8 @@ module.exports.policies = {
     '*' : 'authenticated'
   },
   anime:{
-    search:'flash'
+    search:'flash',
+    rekomendasi:'authenticated'
   },
   rating:{
     tambahRating:'flash'
