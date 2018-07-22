@@ -19,6 +19,7 @@ module.exports = {
 
     },
     updateEpisode: function (req, res) {
+        
         var nativePromise = new Promise(function (resolve, reject) {
         Anime.native(function (err, collection) {
             if (err) return res.serverError(err);
@@ -26,48 +27,103 @@ module.exports = {
             collection.find({ status: "OnGoing" }, {
                 nama_anime: true,
                 url_anime_english: true,
+                url_anime_indo: true,
                 nama_anime: true,
                 anime_id: true,
             }).toArray(function (err, results) {
                 
                 if (err) return res.serverError(err);
                 results.forEach(function (anime) {
+                    request(anime.url_anime_indo, function (err, res, body) {
+                        
+                        if (!err && res.statusCode == 200) {
+                            var metadata = []
+                            var $ = cheerio.load(body);
+                            $('li','.episodelist').each(function(index){
+                                var url = $(this).find('a','.lefttitle').attr('href')
+                                var episode = $(this).find('.leftoff').text()
+                                var episodes = parseInt(episode)
+                                
+                                metadata.push({
+                                    id_anime: anime._id.toString(),
+                                    url: url,
+                                    episode: episodes
+                                })
+                            })
+                            
+
+                        }
+                        
+                        async.map(metadata, (function(metadatas, callback) {
+                            Episode_anime.native(function (err, collection) {
+                                if (err) return res.serverError(err);
+                    
+                                collection.find({ id_anime: metadatas.id_anime }, {
+                                    id_anime:true
+                                }).toArray(function (err, results) {
+                                    console.log(results)
+                                })
+                            })
+    
+                        }), function(error, createdOrFoundObjects) {
+                            
+                          //   console.log(error, createdOrFoundObjects)
+                        });
+                            
+                        
+                         
+                    })
                     
                     request(anime.url_anime_english, function (err, res, body) {
-                        var metadata = []
+                        
                         if (!err && res.statusCode == 200) {
-                            
+                            var metadata = []
                             var $ = cheerio.load(body);
                             $('.infovan').each(function (index) {
 
                                 var url = $(this).attr('href')
                                 var episode = $(this).find('.infoept2', '.centerv').text()
                                 metadata.push({
-                                    id_anime: anime._id,
-                                    url: url,
+                                    id_anime: anime._id.toString(),
+                                    url: "http://animeheaven.eu/"+url,
                                     episode: episode
                                 })
+                               
 
                             })
 
                         }
-                        // console.log(metadata)
-                        return resolve(metadata)
+                        
+                        async.map(metadata, (function(object, callback) {
+                             Episode_anime.findOrCreate({id_anime:object.id_anime,episode:object.episode},{
+                                 owner_anime : object.id_anime,
+                                 id_anime:object.id_anime,
+                                 episode:object.episode,
+                                 url_versi_english:object.url,
+                                 url_versi_indo:""
+                             }).exec(callback)                   
+                            
+                          }), function(error, createdOrFoundObjects) {
+                            //   console.log(error, createdOrFoundObjects)
+                          });
                          
                     })
                         
                     
 
                 })
+                
 
                 return res.ok(results);
             })
 
         })
+        
     })
-    return nativePromise.then(function (itemList) {
-        console.log(itemList)
-      })
+    
+    // return nativePromise.then(function (itemList) {
+    //     console.log(itemList)
+    //   })
 },
 
 
