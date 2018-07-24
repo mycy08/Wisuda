@@ -19,6 +19,7 @@ module.exports = {
 
     },
     updateEpisode: function (req, res) {
+       
         
         var nativePromise = new Promise(function (resolve, reject) {
         Anime.native(function (err, collection) {
@@ -55,19 +56,19 @@ module.exports = {
                         }
                         
                         async.map(metadata, (function(metadatas, callback) {
-                            Episode_anime.native(function (err, collection) {
-                                if (err) return res.serverError(err);
-                    
-                                collection.find({ id_anime: metadatas.id_anime }, {
-                                    id_anime:true
-                                }).toArray(function (err, results) {
-                                    console.log(results)
-                                })
-                            })
+                            // console.log(metadatas)
+                            
+
+                            Episode_anime.update({                 
+                                id_anime:metadatas.id_anime 
+                                },{url_versi_indo:metadatas.url}).exec(callback)
+                                // console.log(us)
     
                         }), function(error, createdOrFoundObjects) {
                             
-                          //   console.log(error, createdOrFoundObjects)
+                                console.log(error, createdOrFoundObjects)
+                            
+                           
                         });
                             
                         
@@ -108,6 +109,7 @@ module.exports = {
                           });
                          
                     })
+                    
                         
                     
 
@@ -120,6 +122,7 @@ module.exports = {
         })
         
     })
+    
     
     // return nativePromise.then(function (itemList) {
     //     console.log(itemList)
